@@ -7,10 +7,10 @@
 
 <?php
 //mysql接続
-$dsn = 'mysql:dbname=tb210649db;host=localhost';
-$user = 'tb-210649';
-$password = 'DdEE5YTgzB';
-$pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING)); //パスワード的なもの
+$dsn = 'mysql:dbname=*********;host=*********';
+$user = '*******';
+$password = '********';
+$pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING)); //鍵的なもの
 
 //createテーブル作成
 $sql = "CREATE TABLE IF NOT EXISTS board"
@@ -18,12 +18,12 @@ $sql = "CREATE TABLE IF NOT EXISTS board"
 	. "id INT AUTO_INCREMENT PRIMARY KEY," //id
 	. "name char(32)," //name
 	. "comment TEXT," //comment
-  . "d TEXT" //date
+        . "d TEXT" //date
 	.");";
 $stmt = $pdo->query($sql);
 
 /*
-//showテーブル一覧表示
+//テーブル一覧表示
 $sql ='SHOW TABLES';
 	$result = $pdo -> query($sql);
 	foreach ($result as $row){
@@ -40,10 +40,7 @@ $sql ='SHOW CREATE TABLE board';
 	}
 	echo "<hr>";
 */
-
-
 ?>
-
 
 <!-- HTML領域 -->
 <h1 style="font-size: 20px;">やばい掲示板</h1>
@@ -70,14 +67,12 @@ $sql ='SHOW CREATE TABLE board';
 <hr>
 <!-- HTML領域 -->
 
-
-
+<!-- PHP領域 -->	
 <?php
 if(!empty($_POST["name"]) && !empty($_POST["comment"]) && ($_POST["pass"]==="アーイ")){
   //編集番号を受け付けたときの処理
   if(!empty($_POST["edit"])){
     echo "****************名前・コメントを変更しました****************"."<br>";
-
 
     //updateで編集
     $id = $_POST["edit"];       //変更する投稿番号
@@ -93,17 +88,12 @@ if(!empty($_POST["name"]) && !empty($_POST["comment"]) && ($_POST["pass"]==="ア
     $stmt->bindParam(':d', $d, PDO::PARAM_STR);
     $stmt->execute();
 
-
-
+	  
   //新規投稿コメントを受け付けたときの処理
   }else{
     echo "****************コメントを受け付けました****************"."<br>";
 
-
-
     //insertでデータ入力
-
-
     $name = $_POST["name"]; //名前
     $comment = $_POST["comment"]; //コメント
     $d = date("Y/m/d H:i:s");     //年月日時間
@@ -114,10 +104,9 @@ if(!empty($_POST["name"]) && !empty($_POST["comment"]) && ($_POST["pass"]==="ア
     $sql -> bindParam(':comment', $comment, PDO::PARAM_STR);
     $sql -> bindParam(':d', $d, PDO::PARAM_STR);
     $sql -> execute();
-
-
-
   }
+	
+	
   //コメントがないときの処理
 }else{
   echo "****************名前とコメントを入力！****************"."<br>";
@@ -125,20 +114,16 @@ if(!empty($_POST["name"]) && !empty($_POST["comment"]) && ($_POST["pass"]==="ア
   //削除対象番号を受け付けたときの処理
   if(!empty($_POST["del"])&& ($_POST["pass"]==="アーイ")){
 
-
     //deleteで削除 selectで確認
     $id = $_POST["del"];
     $sql = 'delete from board where id=:id';
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-
-
   }
 }
 
-
-
+	
 //表示
 //入力データをselectで表示
 $sql = 'SELECT * FROM board';
@@ -149,10 +134,8 @@ foreach ($results as $row){
 	echo $row['id'].' ';
 	echo $row['name'].' ';
 	echo $row['comment'].' ';
-  echo $row['d'].'<br>';
+        echo $row['d'].'<br>';
 	echo "<hr>";
 }
-
-
 ?>
 </html>
